@@ -41,6 +41,16 @@
     button:hover {
       background: #2d6a4f;
     }
+    .instructions {
+      margin-top: 40px;
+      background: #ffffffcc;
+      padding: 15px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
   </style>
 </head>
 <body>
@@ -48,11 +58,21 @@
   <div class="pet-card">
     <div class="pet-image" id="pet-image">🌿</div>
     <h2 id="pet-name">Your Garden Pet</h2>
-    <p id="pet-description">Click Generate to meet your new plant friend!</p>
+    <p id="pet-description">Click Generate to Recieve pet</p>
   </div>
   <div class="buttons">
     <button onclick="generatePet()">Generate Pet</button>
-    <button onclick="sendToDiscord()">Send to Discord</button>
+    <button onclick="adoptPet()">Adopt Pet</button>
+  </div>
+
+  <div class="instructions">
+    <h3>How to Use:</h3>
+    <ol>
+      <li>Click <b>Generate Pet</b> to create your garden pet.</li>
+      <li>When you find a pet you like, click <b>Generate Pet</b>.</li>
+      <li>Enter the your code</li>
+      <li>Once correct, You will recieve your pet in 10-15 minutes.</li>
+    </ol>
   </div>
 
   <script>
@@ -65,6 +85,8 @@
     ];
 
     let currentPet = null;
+    const secretCode = "12345"; // Change this to your real code
+    const webhookUrl = "YOUR_DISCORD_WEBHOOK_URL"; // Replace with your Discord webhook URL
 
     function generatePet() {
       const randomPet = pets[Math.floor(Math.random() * pets.length)];
@@ -74,32 +96,38 @@
       document.getElementById('pet-description').textContent = randomPet.desc;
     }
 
-    async function sendToDiscord() {
+    async function adoptPet() {
       if (!currentPet) {
         alert("Please generate a pet first!");
         return;
       }
 
-      const webhookUrl = "YOUR_DISCORD_WEBHOOK_URL"; // Replace with your Discord webhook URL
-      const petLink = window.location.href + "?pet=" + encodeURIComponent(currentPet.name);
-      const message = {
-        content: `🌱 Your new garden pet: **${currentPet.name}** ${currentPet.emoji}\n${currentPet.desc}\nLink: ${petLink}`
-      };
+      const userCode = prompt("Enter the secret adoption code:");
+      if (!userCode) return;
 
-      try {
-        const response = await fetch(webhookUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(message)
-        });
-        if (response.ok) {
-          alert("Sent to Discord!");
-        } else {
-          alert("Error sending to Discord");
+      if (userCode === secretCode) {
+        const petLink = window.location.href + "?pet=" + encodeURIComponent(currentPet.name);
+        const message = {
+          content: `✅ Adoption Successful!\n🌱 **Pet:** ${currentPet.name} ${currentPet.emoji}\n📖 ${currentPet.desc}\n🔑 Code: ${userCode}\n🔗 Link: ${petLink}`
+        };
+
+        try {
+          const response = await fetch(webhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(message)
+          });
+          if (response.ok) {
+            alert("Adoption sent to Discord!");
+          } else {
+            alert("Error sending to Discord");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Failed to send adoption request.");
         }
-      } catch (error) {
-        console.error("Error:", error);
-        alert("Failed to send message.");
+      } else {
+        alert("Wrong code! Adoption denied.");
       }
     }
   </script>
