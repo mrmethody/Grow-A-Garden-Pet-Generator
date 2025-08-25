@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grow a Garden Pet Generator</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      background: #e9f7ef;
+      padding: 20px;
+    }
+    h1 {
+      color: #2d6a4f;
+    }
+    .pet-card {
+      background: #fff;
+      padding: 20px;
+      margin: 20px auto;
+      border-radius: 15px;
+      max-width: 400px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .pet-image {
+      font-size: 80px;
+    }
+    .buttons {
+      margin-top: 20px;
+    }
+    button {
+      background: #40916c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #2d6a4f;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌱 Grow a Garden Pet 🌱</h1>
+  <div class="pet-card">
+    <div class="pet-image" id="pet-image">🌿</div>
+    <h2 id="pet-name">Your Garden Pet</h2>
+    <p id="pet-description">Click Generate to meet your new plant friend!</p>
+  </div>
+  <div class="buttons">
+    <button onclick="generatePet()">Generate Pet</button>
+    <button onclick="sendToDiscord()">Send to Discord</button>
+  </div>
+
+  <script>
+    const pets = [
+      { name: "Sprouty", emoji: "🌱", desc: "A tiny sprout full of life." },
+      { name: "Blossom", emoji: "🌸", desc: "Loves sunlight and singing birds." },
+      { name: "Fernie", emoji: "🌿", desc: "A calm fern with a gentle aura." },
+      { name: "Cactus Jack", emoji: "🌵", desc: "Spiky but friendly." },
+      { name: "Pumpkin Puff", emoji: "🎃", desc: "Loves autumn vibes." }
+    ];
+
+    let currentPet = null;
+
+    function generatePet() {
+      const randomPet = pets[Math.floor(Math.random() * pets.length)];
+      currentPet = randomPet;
+      document.getElementById('pet-image').textContent = randomPet.emoji;
+      document.getElementById('pet-name').textContent = randomPet.name;
+      document.getElementById('pet-description').textContent = randomPet.desc;
+    }
+
+    async function sendToDiscord() {
+      if (!currentPet) {
+        alert("Please generate a pet first!");
+        return;
+      }
+
+      const webhookUrl = "YOUR_DISCORD_WEBHOOK_URL"; // Replace with your Discord webhook URL
+      const petLink = window.location.href + "?pet=" + encodeURIComponent(currentPet.name);
+      const message = {
+        content: `🌱 Your new garden pet: **${currentPet.name}** ${currentPet.emoji}\n${currentPet.desc}\nLink: ${petLink}`
+      };
+
+      try {
+        const response = await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(message)
+        });
+        if (response.ok) {
+          alert("Sent to Discord!");
+        } else {
+          alert("Error sending to Discord");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Failed to send message.");
+      }
+    }
+  </script>
+</body>
+</html>
